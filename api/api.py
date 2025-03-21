@@ -6,14 +6,14 @@ import logging
 
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/send-recipients": {"origins": "http://localhost:3000"}})
+cors = CORS(app, resources={r"/api/send-recipients": {"origins": "http://localhost:3000"}})
 
 headers={
     'Content-type':'application/json', 
     'Accept':'application/json'
 }
 
-@app.route('/send-recipients', methods=['POST'])
+@app.route('/api/send-recipients', methods=['POST'])
 @cross_origin()
 def send_recipients():
     """
