@@ -37,7 +37,7 @@ export default function Home() {
         <h2 className="text-2xl font-semibold mb-4">How It Works</h2>
         <ol className="list-decimal list-inside space-y-2">
           <li>Enter participating names and emails.</li>
-          <li>When done, press "Submit", and participants will be notified of who they will be gifting to, via email.</li>
+          <li>When done, press the submit button, and participants will be notified of who they will be gifting to, via email.</li>
         </ol>
       </div>
       <InputForm/>
