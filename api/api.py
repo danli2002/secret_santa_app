@@ -1,12 +1,12 @@
 import sys
 from flask import Flask, request
-from flask_cors import CORS, cross_origin
+# from flask_cors import CORS, cross_origin
 import santa
-import logging
+# import logging
 
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/api/send-recipients": {"origins": "http://localhost:3000"}})
+# cors = CORS(app, resources={r"/api/send-recipients": {"origins": "http://localhost:3000"}})
 
 headers={
     'Content-type':'application/json', 
@@ -14,7 +14,7 @@ headers={
 }
 
 @app.route('/api/send-recipients', methods=['POST'])
-@cross_origin()
+# @cross_origin()
 def send_recipients():
     """
     Main route for sending emails to participants

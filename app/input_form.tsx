@@ -2,7 +2,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useFieldArray } from "react-hook-form"
 import { z } from "zod"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import {
     Form,
     FormControl,
@@ -24,10 +26,12 @@ const formSchema = z.object({
 })
 
 export function InputForm() {
+    const [alertMessage, setAlertMessage] = useState<string | null>(null)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            participants: [{name: "", email: "" }],
+            participants: [{ name: "", email: "" }],
         },
     })
 
@@ -37,19 +41,32 @@ export function InputForm() {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+        if (values.participants.length < 2) {
+            setAlertMessage("You must have at least two participants.")
+            return
+        }
+
+        setAlertMessage(null) 
+
         fetch("/api/send-recipients", {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(values),
         })
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {alertMessage && (
+                    <Alert className="bg-red-100">
+                        <AlertTitle>Heads up!</AlertTitle>
+                        <AlertDescription>{alertMessage}</AlertDescription>
+                    </Alert>
+                )}
+
                 {fields.map((field, index) => (
-                    <div key={field.id} className="flex items-end gap-x-4">
+                    <div key={field.id} className="flex items-center gap-x-4">
                         <FormField
                             control={form.control}
                             name={`participants.${index}.name`}
@@ -76,26 +93,19 @@ export function InputForm() {
                                 </FormItem>
                             )}
                         />
-                        {/* <Button
-                            type="button"
-                            className="bg-red-500"
-                            onClick={() => remove(index)}
-                        >
-                            Remove
-                        </Button> */}
-                        <X 
-                            type="button"
-                            onClick={() => remove(index)}
-                            color="#ff0000"
-                            className="flex items-center"
-                        />
+                        {index > 0 && (
+                            <X
+                                type="button"
+                                onClick={() => remove(index)}
+                                className="cursor-pointer"
+                            />
+                        )}
                     </div>
                 ))}
 
                 <div className="flex justify-center">
                     <Button
                         type="button"
-                        className="bg-blue-500"
                         onClick={() => append({ name: "", email: "" })}
                     >
                         Add Participant
